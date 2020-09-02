@@ -1,6 +1,6 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
-<a href='https://vizibop.com'</a> is a service that allows musicians and podcasters to create a MP4 video synched from an audio file.
+<a href='https://vizibop.com'>Vizibop</a> is a service that allows musicians and podcasters to create a MP4 video synched from an audio file.
 
 <div class='flex'>
   
@@ -10,9 +10,11 @@
   </div>
   
    <div class='flex-initial'>
+     <video id="video2" poster="https://storage.googleapis.com/musicmation-83a98.appspot.com/newc.jpg" controls="controls" class="showcase"><source src="https://storage.googleapis.com/musicmation-83a98.appspot.com/newcleus.mp4" type="video/mp4"></video>
   </div>
   
    <div class='flex-initial'>
+     <video id="video1" poster="https://storage.googleapis.com/musicmation-83a98.appspot.com/dilla2.jpg" controls="controls" class="showcase"><source src="https://storage.googleapis.com/musicmation-83a98.appspot.com/dilla.mp4" type="video/mp4"></video>
   </div>
 
 At its core, Vizibop leverages CANVAS, HTML5 Audio, MediaRecorder, and P5.js which can generate a WEBM file with only front end code.  From there, that WEBM file is sent through AWS Elastic Transcoder to convert the WEBM file to a MP4 file which can then be shared on sites like Instagram, TikTok, and YouTube.
