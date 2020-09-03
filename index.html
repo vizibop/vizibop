@@ -1,26 +1,165 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
-<div class='text-xl mb-6'><a href='https://vizibop.com'>Vizibop</a> is a service that allows musicians and podcasters to create a MP4 video synched from an audio file.</div>
+<div class="pt-8 flex items-center justify-center">
+    <div class="max-w-4xl max-auto w-full mx-6">
 
-<div class='flex'>
+
+        <div class='text-3xl font-bold mb-6'>Producing a Music Video in the Browser</div>
+
+        <div class='text-xl mt-6 mb-6'>This page and associated code pens are meant to share with other developers a means of creating a WEBM video from a dynamically generated canvas driven from an audio file.</div>
+
+        <h2 class='text-2xl font-bold'>Introduction</h2>
+
+        <div class='text-xl mb-6'>I'm <a class='underline' target='_blank'  href='https://vizibop.com/about'>Jason</a>.  I created <a class='underline' href='https://vizibop.com'>Vizibop</a>, a service currently in beta that allows musicians and podcasters to quickly and easily create a unique MP4 video synched from an audio file.</div>
+
+
+<div class='text-xl mt-6 mb-6'>At its core, Vizibop leverages CANVAS, HTML5 Audio, MediaRecorder, and P5.js to generate a WEBM file with front end code only.  From there, that WEBM file is sent through AWS Elastic Transcoder to convert the WEBM file to a MP4 file which can then be shared on sites like Instagram, TikTok, and YouTube.</div>
+   
+    
+    
+<div class='text-xl mt-6 mb-6'>Here are some examples of videos created with Vizibop:</div>
+
+<div class='flex '>
   
-  <div class='flex-initial mx-2'>
+  <div class='w-1/3 mx-2'>
       <video id="video4" poster="https://storage.googleapis.com/musicmation-83a98.appspot.com/finalRace.jpg" controls="controls" class="showcase"><source src="https://storage.googleapis.com/musicmation-83a98.appspot.com/finalRace.mp4" type="video/mp4"></video>
 
   </div>
   
-   <div class='flex-initial mx-2'>
+   <div class='w-1/3 mx-2'>
      <video id="video2" poster="https://storage.googleapis.com/musicmation-83a98.appspot.com/newc.jpg" controls="controls" class="showcase"><source src="https://storage.googleapis.com/musicmation-83a98.appspot.com/newcleus.mp4" type="video/mp4"></video>
   </div>
   
-   <div class='flex-initial mx-2'>
-     <video id="video1" poster="https://storage.googleapis.com/musicmation-83a98.appspot.com/dilla2.jpg" controls="controls" class="showcase"><source src="https://storage.googleapis.com/musicmation-83a98.appspot.com/dilla.mp4" type="video/mp4"></video>
+   <div class='w-1/3 mx-2'>
+    <video id="video3" poster="https://s3.amazonaws.com/video.vizibop.com/4nv4usomJ4YHJMxdVjyu/thumbs-4nv4usomJ4YHJMxdVjyu-00001.png" controls="controls" class="showcase"><source src="https://s3.amazonaws.com/video.vizibop.com/4nv4usomJ4YHJMxdVjyu/4nv4usomJ4YHJMxdVjyu.mp4" type="video/mp4"></video>
   </div>
   
 </div>
 
-<div class='text-xl mb-6'>At its core, Vizibop leverages CANVAS, HTML5 Audio, MediaRecorder, and P5.js which can generate a WEBM file with only front end code.  From there, that WEBM file is sent through AWS Elastic Transcoder to convert the WEBM file to a MP4 file which can then be shared on sites like Instagram, TikTok, and YouTube.</div>
 
-<div class='text-xl mb-6'>This repository is meants to share with other developers a means of creating a WEBM video from a dynamically generated canvas driven from an audio file, user configuration and a sprinkling of randomness.</div>
+
+
+
+<h2 class='text-2xl mt-8 font-bold'>Creating a basic animation</h2>
+
+<div class='text-xl mb-6'><a class='underline' target='_blank' href='https://p5js.org/'>P5.js</a> and <a class='underline' target='_blank' href='https://p5js.org/reference/#/libraries/p5.sound'>P5.sound</a> are a set of javascript libraries that make drawing on a canvas and syncing it to audio relatively straight forward.  Here, I am using <a class='underline' target='_blank' href='https://github.com/processing/p5.js/wiki/Global-and-instance-mode'></a>instance</a> mode to make sure we don't pollute the name space.  Here is a very basic scaffolding for a p5 animation:</div>
+
+<span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/ZEWXRGm'>Codepen</a></span>
+
+<pre class='mt-8'>
+    const s = sketch => {
+
+        //sketch wide variables can be put here.  useful
+        //in the draw function where you may be incrementing
+        //or using some fancy trigonometry for animations
+        let verticalPosition = 0;
+    
+        //preload things like images and fonts you want in your canvas
+        sketch.preload = function() {
+    
+    
+        }
+    
+        //create your canvas and set things that you don't want changed
+        sketch.setup = function() {
+    
+            //draw the canvas as big as possible
+            var canvas = sketch.createCanvas(window.innerWidth, window.innerHeight);
+    
+            //drop it in a div with id = animation
+            canvas.parent('animation')
+    
+    
+        }
+    
+        //loop and draw stuff X times a second
+        sketch.draw = function() {
+    
+            console.log(verticalPosition)
+            sketch.background('#48639B');
+    
+    
+    
+            //draw a line using two points in space
+            //sketch.fill('#F1225E')
+            sketch.stroke('#F687B3')
+            sketch.strokeWeight(10)
+            sketch.line(0, verticalPosition, sketch.width, verticalPosition);
+    
+            //modify the height during each draw iteration
+            verticalPosition = verticalPosition - 0.5;
+            if (verticalPosition < 0) {
+                verticalPosition = sketch.height;
+            }
+    
+        }
+    
+    
+    }
+    
+    //create an instance of P5
+    let p5js = new p5(s);
+</pre>
+
+<h2 class='text-2xl mt-8 font-bold'>Playing Music</h2>
+
+<div class='text-xl mb-6'>Audio in the browser is a bit of a rabbit hole.  <a class='underline' target='_blank' href='https://howlerjs.com/'>Howler</a> and <a class='underline' target='_blank' href='https://createjs.com/soundjs'>SoundJS</a> will make your life a lot easier if you get into jukeboxes and video games.  To keep things simple, let's simply create a hidden audio element and allow a user to click a button to begin playing a song.  For Vizibop we allow users to upload their own songs in WAV or MP3 format.</div>
+
+<span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/qBZPMpv'>Codepen for Playing Music</a></span>
+
+
+<h2 class='text-2xl font-bold mt-8'>Wiring Audio to P5</h2>
+
+<div class='text-xl mb-6'>P5 and the sound module make it super easy to have the variables within your sketch change based on the volume and frequency of a sound.  Out of the box you can use <a class='underline' target='_blank' href='https://p5js.org/reference/#/p5.Amplitude'>Amplitude</a> and <a class='underline' target='_blank' href='https://p5js.org/reference/#/p5.FFT'>FFT</a> to do some pretty amazing things.  The <a class='underline' target='_blank' href='https://www.youtube.com/watch?v=Pn1g1wjxl_0'>Coding Train</a> has a whole series of videos on sound within P5 that I encourage you to watch.</div>
+
+<div class='text-xl mb-6'>In this example, we want to do some beat detection to change the background of the canvas.  Beat detection also gets a little tricky depending on the song and quality of the underlying audio.  In Vizibop we let the user define which frequency bands to key off of to really dial in more accurate beat detection.</div>
+
+
+<span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/MWyEBew'>Codepen for Beat Detection</a></span>
+
+<h2 class='text-2xl font-bold mt-8'>Customize the animation</h2>
+
+<div class='text-xl mb-6'>The animation above is pretty basic.  A better experience allows the users to turn knobs and dials to customize their animation.  In our case, we have tried to balance just enough knobs and dials to create a wide range of videos without overwhelming the user with too many options.  The possibilities are really unlimited when you combine images, typography, color, motion, and math.</div>
+
+<span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/zYqEJVe'>Codepen for a Custom Animation</a></span>
+
+
+
+<h2 class='text-2xl font-bold mt-8'>Record a video</h2>
+
+<div class='text-xl mb-6'>We now have the key components to record a music video built entirely in the front end.</div>
+
+<div class='text-xl mb-6'>Here's where the fun begins particularly across browsers and computers.  MediaRecorder and captureStream is the close hand magic that allows us to create a WEBM video from the components above.  As of the writing of this document, Safari only supports MediaRecorder in experimental mode.  Firefox does not support VP9.  Chrome is our best friend here.  With 70% market share between Chrome and Firefox, we were willing to move ahead with this approach.  </div>
+
+<span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/xxVXLrQ'>Codepen for Recording a Video</a></span>
+
+
+</div>
+
+</div>
+
+
+
+<style>
+
+pre {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-left: 3px solid #f36d33;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 1.6em;
+    max-width: 100%;
+    overflow: auto;
+    padding: 1em 1.5em;
+    display: block;
+    word-wrap: break-word;
+}
+
+
+</style>
 
 
