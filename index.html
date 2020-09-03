@@ -1,5 +1,6 @@
 <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
+
 <div class="pt-8 flex items-center justify-center">
     <div class="max-w-4xl max-auto w-full mx-6">
 
@@ -129,9 +130,23 @@
 
 <div class='text-xl mb-6'>We now have the key components to record a music video built entirely in the front end.</div>
 
-<div class='text-xl mb-6'>Here's where the fun begins particularly across browsers and computers.  MediaRecorder and captureStream is the close hand magic that allows us to create a WEBM video from the components above.  As of the writing of this document, Safari only supports MediaRecorder in experimental mode.  Firefox does not support VP9.  Chrome is our best friend here.  With 70% market share between Chrome and Firefox, we were willing to move ahead with this approach.  </div>
+<div class='text-xl mb-6'>Here's where the fun begins particularly across browsers and computers.  MediaRecorder and captureStream is the close hand magic that allows us to create a WEBM video from the components above.  As of the writing of this document, Safari only supports MediaRecorder in experimental mode.  Firefox does not support VP9.  Chrome is our best friend here.  With 70% market share between Chrome and Firefox, we were willing to move ahead with this approach.</div>
+
+<div class='text-xl mb-6'>I am still tweaking the configuration here.  It seems that both the VP9 and H264 codecs underperform VP8 for this application.  Adjusting both the frame rate of the animation and the captureStream combined with the optional videoBitsPerSecond parameter for the MediaRecorder seem to improve any visual lag and artifacts due to compression.  It's not perfect but so far I am pleased with the results.  </div>
 
 <span class='rounded border p-2 bg-blue-100'><a class='underline' target='_blank' href='https://codepen.io/Vizibop/pen/xxVXLrQ'>Codepen for Recording a Video</a></span>
+
+<h2 class='text-2xl font-bold mt-8'>What's next?</h2>
+
+<div class='text-xl mb-6'>With this technique, there really isn't a limit to the types of videos musicians and podcasters can create in the browser.  With that said, by design, Vizibop will not evolve into a full blown video editor.  A guiding principle is to keep the user experience as simple as possible while maximizing the number of unique videos that can be created.  I am trying to avoid something like <a href='https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/plugins/ZGameEditor%20Visualizer.htm'>ZGameEditor Visualizer</a>.  My intent is to create a tool that is <a href='https://bobsutton.typepad.com/my_weblog/2008/09/sesame-street-simple-ag-lafleys-leadership-philosiphy.html'></a>Sesame Street Simple</a>.</div>
+
+<div class='text-xl mb-6 mb-4'>Your feedback, advice, and guidance is always welcome</div>
+
+<div class='font-bold text-xl mb-1'>Jason</div>
+<div class='text-lg mb-12'><a target='_blank' class='underline font-bold text-pink-500' href='https://twitter.com/@vizibop'>@vizibop</a> / <a target='_blank' href="#" class="underline font-bold text-pink-500 cryptedmail" data-name="jason" data-domain="vizibop" data-tld="com" onclick="window.location.href = 'mailto:' + this.dataset.name + '@' + this.dataset.domain + '.' + this.dataset.tld; return false;"></a></div>
+
+
+
 
 
 </div>
@@ -141,6 +156,11 @@
 
 
 <style>
+
+.cryptedmail:after {
+  content: attr(data-name) "@" attr(data-domain) "." attr(data-tld);
+
+}
 
 pre {
     background: #f4f4f4;
